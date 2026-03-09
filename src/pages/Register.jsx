@@ -39,7 +39,7 @@ const Register = () => {
     if (result.success) {
       navigate('/');
     } else {
-      setError(t('auth.register.error'));
+      setError(result.error || t('auth.register.error'));
     }
 
     setLoading(false);

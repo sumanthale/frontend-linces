@@ -29,7 +29,13 @@ const Services = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      await quotesAPI.create(formData);
+      const quoteData = {
+        brandName: formData.companyName,
+        email: formData.email,
+        message: `Contact: ${formData.contactPerson}\nPhone: ${formData.phone}\nQuantity: ${formData.quantity}\n\n${formData.description}`
+      };
+
+      await quotesAPI.create(quoteData);
       setMessage({ type: 'success', text: t('services.quote.success') });
       setFormData({
         companyName: '',
@@ -41,7 +47,7 @@ const Services = () => {
       });
     } catch (error) {
       console.error('Error submitting quote:', error);
-      setMessage({ type: 'error', text: t('services.quote.error') });
+      setMessage({ type: 'error', text: error.response?.data?.error || t('services.quote.error') });
     } finally {
       setLoading(false);
     }

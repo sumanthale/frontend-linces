@@ -16,6 +16,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -23,7 +24,19 @@ const ProductDetails = () => {
         setLoading(true);
         setError(null);
         const response = await productsAPI.getById(id);
-        setProduct(response.data);
+        const productData = response.data.data;
+
+        const formattedProduct = {
+          id: productData.id,
+          name: productData.name_en,
+          description: productData.description_en,
+          price: parseFloat(productData.price),
+          image: productData.imageUrl,
+          category: productData.category,
+          stock: 100
+        };
+
+        setProduct(formattedProduct);
       } catch (error) {
         console.error('Error fetching product:', error);
         setError(t('productDetails.error'));
@@ -35,9 +48,15 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id, t]);
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity);
-    navigate('/cart');
+  const handleAddToCart = async () => {
+    setAdding(true);
+    try {
+      await addToCart(product, quantity);
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      setAdding(false);
+    }
   };
 
   if (loading) {
@@ -129,10 +148,11 @@ const ProductDetails = () => {
 
                 <button
                   onClick={handleAddToCart}
-                  className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition flex items-center justify-center space-x-2 text-lg font-semibold"
+                  disabled={adding}
+                  className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition flex items-center justify-center space-x-2 text-lg font-semibold disabled:opacity-50"
                 >
                   <ShoppingCart size={24} />
-                  <span>{t('productDetails.addToCart')}</span>
+                  <span>{adding ? t('common.loading') : t('productDetails.addToCart')}</span>
                 </button>
               </div>
             )}

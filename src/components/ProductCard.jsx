@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -8,10 +9,18 @@ const ProductCard = ({ product }) => {
   const { t } = useLanguage();
   const { addToCart } = useCart();
   const { isAuthenticated, isAdmin } = useAuth();
+  const [adding, setAdding] = useState(false);
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.preventDefault();
-    addToCart(product);
+    setAdding(true);
+    try {
+      await addToCart(product);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -46,11 +55,12 @@ const ProductCard = ({ product }) => {
           {isAuthenticated && !isAdmin() && product.stock > 0 && (
             <button
               onClick={handleAddToCart}
-              className="flex items-center space-x-1 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+              disabled={adding}
+              className="flex items-center space-x-1 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
               aria-label={t('products.addToCart')}
             >
               <ShoppingCart size={18} />
-              <span className="text-sm">{t('products.addToCart')}</span>
+              <span className="text-sm">{adding ? '...' : t('products.addToCart')}</span>
             </button>
           )}
         </div>

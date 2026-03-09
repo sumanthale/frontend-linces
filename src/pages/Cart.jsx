@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -7,11 +8,22 @@ import CartItem from '../components/CartItem';
 const Cart = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { cartItems, getCartTotal, checkout } = useCart();
+  const { cartItems, getCartTotal, checkout, loading } = useCart();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleCheckout = () => {
-    const orderNumber = checkout();
-    navigate('/checkout', { state: { orderNumber } });
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    setError('');
+
+    try {
+      const orderNumber = await checkout();
+      navigate('/checkout', { state: { orderNumber } });
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError(err.response?.data?.error || 'Checkout failed. Please try again.');
+      setCheckoutLoading(false);
+    }
   };
 
   if (cartItems.length === 0) {
@@ -47,6 +59,12 @@ const Cart = () => {
             <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
 
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-600">
                   <span>{t('cart.subtotal')}</span>
@@ -61,9 +79,10 @@ const Cart = () => {
 
               <button
                 onClick={handleCheckout}
-                className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold mb-4"
+                disabled={checkoutLoading || loading}
+                className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold mb-4 disabled:opacity-50"
               >
-                {t('cart.checkout')}
+                {checkoutLoading ? t('common.loading') : t('cart.checkout')}
               </button>
 
               <Link

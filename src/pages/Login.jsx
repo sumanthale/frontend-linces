@@ -31,7 +31,7 @@ const Login = () => {
     if (result.success) {
       navigate('/');
     } else {
-      setError(t('auth.login.error'));
+      setError(result.error || t('auth.login.error'));
     }
 
     setLoading(false);
