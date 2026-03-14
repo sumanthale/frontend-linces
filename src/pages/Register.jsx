@@ -7,12 +7,16 @@ const Register = () => {
   const { t } = useLanguage();
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  const [accountType, setAccountType] = useState('customer');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -34,7 +38,12 @@ const Register = () => {
       return;
     }
 
-    const result = await register(formData.name, formData.email, formData.password);
+    const result = await register(
+      formData.name,
+      formData.email,
+      formData.password,
+      accountType
+    );
 
     if (result.success) {
       navigate('/');
@@ -46,20 +55,73 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
+
+        {/* Title */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">{t('auth.register.title')}</h2>
+          <h2 className="text-3xl font-bold text-gray-900">
+            {t('auth.register.title')}
+          </h2>
+          <p className="text-gray-500 mt-2">
+            Create your account to get started
+          </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-xl shadow-lg p-8">
+
           {error && (
-            <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-lg">{error}</div>
+            <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-lg">
+              {error}
+            </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Account Type Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Choose Account Type
+            </label>
+
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setAccountType('customer')}
+                className={`p-4 rounded-lg border text-sm font-semibold transition
+                ${
+                  accountType === 'customer'
+                    ? 'border-gray-800 bg-gray-100'
+                    : 'border-gray-300 hover:border-gray-500'
+                }`}
+              >
+                Customer
+                <p className="text-xs text-gray-500 mt-1">
+                  Discover and buy products
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAccountType('brand')}
+                className={`p-4 rounded-lg border text-sm font-semibold transition
+                ${
+                  accountType === 'brand'
+                    ? 'border-gray-800 bg-gray-100'
+                    : 'border-gray-300 hover:border-gray-500'
+                }`}
+              >
+                Brand
+                <p className="text-xs text-gray-500 mt-1">
+                  Sell and manage products
+                </p>
+              </button>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t('auth.register.name')}
               </label>
               <input
@@ -73,7 +135,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t('auth.register.email')}
               </label>
               <input
@@ -87,7 +149,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t('auth.register.password')}
               </label>
               <input
@@ -101,7 +163,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t('auth.register.confirmPassword')}
               </label>
               <input
@@ -117,19 +179,24 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold disabled:opacity-50"
+              className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50"
             >
               {loading ? t('common.loading') : t('auth.register.submit')}
             </button>
+
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              {t('auth.register.hasAccount')}{' '}
-              <Link to="/login" className="text-gray-800 hover:text-gray-600 font-semibold">
-                {t('auth.register.loginLink')}
-              </Link>
-            </p>
+          {/* Login Link */}
+          <div className="mt-6 text-center text-sm">
+            <span className="text-gray-600">
+              {t('auth.register.hasAccount')}
+            </span>{' '}
+            <Link
+              to="/login"
+              className="text-gray-900 font-semibold hover:underline"
+            >
+              {t('auth.register.loginLink')}
+            </Link>
           </div>
         </div>
       </div>

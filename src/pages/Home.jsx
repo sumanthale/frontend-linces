@@ -12,14 +12,12 @@ const Home = () => {
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
-      
       try {
-        const response = await productsAPI.getFeatured();
-        console.log(response);
-        
-        setFeaturedProducts(response.data.products.slice(0, 4));
+        const { data } = await productsAPI.getFeatured();
+        const products = data?.data || [];        
+        setFeaturedProducts(products.slice(0, 4));
       } catch (error) {
-        console.error('Error fetching featured products:', error);
+        console.error("Error fetching featured products:", error);
         setFeaturedProducts([]);
       } finally {
         setLoading(false);

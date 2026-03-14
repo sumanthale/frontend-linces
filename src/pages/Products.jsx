@@ -14,8 +14,10 @@ const Products = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await productsAPI.getAll();
-        setProducts(response.data.products);
+        const { data } = await productsAPI.getAll();
+        const products = data?.data || [];        
+
+        setProducts(products);
       } catch (error) {
         console.error('Error fetching products:', error);
         setError(t('products.error'));
