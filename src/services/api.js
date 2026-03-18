@@ -42,7 +42,7 @@ export const authAPI = {
 };
 
 export const productsAPI = {
-  getAll: () => apiClient.get("/products"),
+  getAll: () => apiClient.get("/products?limit=100"),
   getById: (id) => apiClient.get(`/products/${id}`),
   getFeatured: () => apiClient.get("/products"),
   create: (productData) => apiClient.post("/products", productData),

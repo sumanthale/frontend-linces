@@ -26,7 +26,7 @@ const AdminDashboard = () => {
         quotesAPI.getAll(),
       ]);
 
-      const products = productsRes.data || [];
+      const products = productsRes.data.data || [];
       const quotes = quotesRes.data?.data || [];
 
       setStats({

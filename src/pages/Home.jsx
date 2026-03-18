@@ -31,6 +31,7 @@ const Home = () => {
 
   return (
     <div>
+
       <section
         className="relative bg-cover bg-center h-[600px] flex items-center"
         style={{
