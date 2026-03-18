@@ -13,6 +13,10 @@ const Navigation = () => {
   const { getCartItemsCount } = useCart();
   const { pathname } = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
@@ -20,64 +24,60 @@ const Navigation = () => {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
-
           {/* LOGO */}
-          <Link to="/" className="flex items-center">
-            <span className="text-xl font-semibold tracking-tight text-gray-900">
+          <Link to="/" className="flex items-center space-x-2 group">
+            <span className="text-2xl font-semibold tracking-tight text-gray-900 group-hover:opacity-80 transition">
               Linces'CKF
             </span>
           </Link>
 
-          {/* DESKTOP NAV */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center space-x-10 text-sm font-medium">
             {[
-              { to: "/", label: t("nav.home") },
-              { to: "/products", label: t("nav.products") },
-              { to: "/services", label: t("nav.services") },
-              { to: "/about", label: t("nav.about") },
-              { to: "/contact", label: t("nav.contact") },
-            ].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`text-sm font-medium transition relative ${
-                  pathname === item.to
-                    ? "text-gray-900"
-                    : "text-gray-500 hover:text-gray-900"
-                }`}
-              >
-                {item.label}
+              { name: "home", path: "/" },
+              { name: "products", path: "/products" },
+              { name: "services", path: "/services" },
+              { name: "about", path: "/about" },
+              { name: "contact", path: "/contact" },
+            ].map((item) => {
+              const isActive =
+                item.path === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.path);
 
-                {/* underline animation */}
-                <span
-                  className={`absolute left-0 -bottom-1 h-[2px] w-full bg-gray-900 transition-transform duration-300 ${
-                    pathname === item.to ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}
-                />
-              </Link>
-            ))}
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className="relative group text-gray-600 hover:text-black transition"
+                >
+                  {t(`nav.${item.name}`)}
+
+                  {/* underline */}
+                  <span
+                    className={`
+            absolute left-0 -bottom-1 h-[2px] bg-black transition-all duration-300
+            ${isActive ? "w-full" : ""}
+          `}
+                  />
+                </Link>
+              );
+            })}
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-3">
-
+          {/* RIGHT SECTION */}
+          <div className="flex items-center space-x-3">
             {/* LANGUAGE */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg hover:bg-gray-100 transition"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-200 hover:bg-gray-100 transition text-sm"
             >
               <Globe size={16} />
-              <span className="text-xs font-medium text-gray-700">
-                {language.toUpperCase()}
-              </span>
+              {language.toUpperCase()}
             </button>
 
             {/* USER ACTIONS */}
@@ -85,23 +85,26 @@ const Navigation = () => {
               <>
                 {user?.accountType === "customer" && (
                   <>
+                    {/* CART */}
                     <Link
                       to="/cart"
-                      className="relative p-2 rounded-lg hover:bg-gray-100 transition"
+                      className="relative p-2 rounded-full hover:bg-gray-100 transition"
                     >
-                      <ShoppingCart size={20} />
+                      <ShoppingCart size={22} />
+
                       {getCartItemsCount() > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center">
+                        <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
                           {getCartItemsCount()}
                         </span>
                       )}
                     </Link>
 
+                    {/* ORDERS */}
                     <Link
                       to="/orders"
-                      className="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition"
+                      className="hidden md:flex p-2 rounded-full hover:bg-gray-100 transition"
                     >
-                      <Package size={20} />
+                      <Package size={22} />
                     </Link>
                   </>
                 )}
@@ -109,9 +112,9 @@ const Navigation = () => {
                 {user?.accountType === "brand" && (
                   <Link
                     to="/quotes"
-                    className="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition"
+                    className="hidden md:flex p-2 rounded-full hover:bg-gray-100 transition"
                   >
-                    <FileText size={20} />
+                    <FileText size={22} />
                   </Link>
                 )}
               </>
@@ -119,49 +122,49 @@ const Navigation = () => {
 
             {/* AUTH */}
             {isAuthenticated ? (
-              <>
-                {isAdmin() ? (
-                  <>
-                    <Link
-                      to="/admin/products"
-                      className="hidden md:flex px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
-                    >
-                      {t("nav.admin")}
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="hidden md:block text-sm text-gray-600 hover:text-gray-900"
-                    >
-                      {t("nav.logout")}
-                    </button>
-                  </>
-                ) : (
-                  <div className="hidden md:block">
-                    <UserMenu />
-                  </div>
-                )}
-              </>
+              isAdmin() ? (
+                <>
+                  <Link
+                    to="/admin/products"
+                    className="hidden md:block px-4 py-2 rounded-full bg-black text-white text-sm hover:opacity-90 transition"
+                  >
+                    {t("nav.admin")}
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="hidden md:block text-sm text-gray-600 hover:text-black transition"
+                  >
+                    {t("nav.logout")}
+                  </button>
+                </>
+              ) : (
+                <div className="hidden md:block">
+                  <UserMenu />
+                </div>
+              )
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="hidden md:block text-sm text-gray-600 hover:text-gray-900"
+                  className="hidden md:block text-sm text-gray-600 hover:text-black transition"
                 >
                   {t("nav.login")}
                 </Link>
+
                 <Link
                   to="/register"
-                  className="hidden md:flex px-4 py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
+                  className="hidden md:block px-4 py-2 rounded-full bg-black text-white text-sm hover:opacity-90 transition"
                 >
                   {t("nav.register")}
                 </Link>
               </>
             )}
 
-            {/* MOBILE MENU */}
+            {/* MOBILE MENU BUTTON */}
             <button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -170,68 +173,67 @@ const Navigation = () => {
       </div>
 
       {/* MOBILE MENU */}
-      {isOpen && (
-        <div className="md:hidden border-t bg-white">
-          <div className="px-6 py-4 space-y-4 text-sm">
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isOpen ? "max-h-[500px]" : "max-h-0"
+        }`}
+      >
+        <div className="px-6 py-4 space-y-3 bg-white border-t">
+          {["home", "products", "services", "about", "contact"].map((item) => (
+            <Link
+              key={item}
+              to={item === "home" ? "/" : `/${item}`}
+              onClick={toggleMenu}
+              className="block text-gray-700 py-2 hover:text-black transition"
+            >
+              {t(`nav.${item}`)}
+            </Link>
+          ))}
 
-            {[
-              { to: "/", label: t("nav.home") },
-              { to: "/products", label: t("nav.products") },
-              { to: "/services", label: t("nav.services") },
-              { to: "/about", label: t("nav.about") },
-              { to: "/contact", label: t("nav.contact") },
-            ].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={toggleMenu}
-                className="block text-gray-700 hover:text-gray-900"
-              >
-                {item.label}
-              </Link>
-            ))}
+          {isAuthenticated ? (
+            <>
+              {user?.accountType === "customer" && !isAdmin() && (
+                <Link to="/orders" onClick={toggleMenu} className="block py-2">
+                  My Orders
+                </Link>
+              )}
 
-            {isAuthenticated ? (
-              <>
-                {user?.accountType === "customer" && !isAdmin() && (
-                  <Link to="/orders" onClick={toggleMenu}>
-                    My Orders
-                  </Link>
-                )}
+              {user?.accountType === "brand" && !isAdmin() && (
+                <Link to="/quotes" onClick={toggleMenu} className="block py-2">
+                  My Quotes
+                </Link>
+              )}
 
-                {user?.accountType === "brand" && !isAdmin() && (
-                  <Link to="/quotes" onClick={toggleMenu}>
-                    My Quotes
-                  </Link>
-                )}
-
-                {isAdmin() && (
-                  <Link to="/admin/products" onClick={toggleMenu}>
-                    {t("nav.admin")}
-                  </Link>
-                )}
-
-                <button
-                  onClick={handleLogout}
-                  className="block text-left w-full text-gray-700"
+              {isAdmin() && (
+                <Link
+                  to="/admin/products"
+                  onClick={toggleMenu}
+                  className="block py-2"
                 >
-                  {t("nav.logout")}
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" onClick={toggleMenu}>
-                  {t("nav.login")}
+                  {t("nav.admin")}
                 </Link>
-                <Link to="/register" onClick={toggleMenu}>
-                  {t("nav.register")}
-                </Link>
-              </>
-            )}
+              )}
 
-          </div>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left py-2 text-gray-700"
+              >
+                {t("nav.logout")}
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={toggleMenu} className="block py-2">
+                {t("nav.login")}
+              </Link>
+
+              <Link to="/register" onClick={toggleMenu} className="block py-2">
+                {t("nav.register")}
+              </Link>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
