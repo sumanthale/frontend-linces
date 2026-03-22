@@ -86,7 +86,7 @@
         "line1": "Da vida a tu visión",
         "line2": ""
       },
-      "description": "Asóciate con Linces'CKF para fabricación de prendas de seda de clase mundial.",
+      "description": "Asóciate con Linces'CKF para fabricación de prendas de seda de clase mundial. Desde el concepto hasta la creación, ofrecemos excelencia a gran escala.",
       "ctaPrimary": "Solicitar cotización",
       "ctaSecondary": "Ver portafolio"
     },
@@ -167,7 +167,7 @@
 
     "title": "Servicios de fabricación B2B",
     "subtitle": "Asóciate con nosotros para producción premium",
-    "description": "Ofrecemos servicios completos de fabricación de seda.",
+    "description": "Ofrecemos servicios completos de fabricación para marcas que buscan productos de seda de alta calidad.",
     "features": {
       "title": "Nuestros servicios",
       "design": {
@@ -203,7 +203,7 @@
 
   "about": {
     "title": "Sobre Linces'CKF",
-    "subtitle": "Creando prendas de seda atemporales con precisión, pasión y propósito.",
+    "subtitle": "Creando prendas de seda atemporales con precisión y pasión.",
     "story": {
       "title": "Nuestra historia",
       "content": "Creamos prendas de seda premium combinando tradición y diseño moderno."
@@ -220,7 +220,7 @@
       "integrity": "Integridad"
     },
     "finalCTA": {
-      "title": "Asóciate con nosotros para fabricación premium de seda",
+      "title": "Asóciate con nosotros para fabricación premium",
       "work": "Trabaja con nosotros"
     }
   },
@@ -251,7 +251,11 @@
     "continueShopping": "Seguir comprando",
     "subtotal": "Subtotal",
     "total": "Total",
-    "checkout": "Proceder al pago"
+    "checkout": "Proceder al pago",
+    "remove": "Eliminar",
+    "quantity": "Cantidad",
+    "update": "Actualizar",
+    "itemAdded": "¡Producto agregado al carrito!"
   },
 
   "checkout": {
@@ -262,6 +266,42 @@
     "continueShopping": "Seguir comprando"
   },
 
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate aquí",
+      "error": "Credenciales inválidas.",
+      "success": "Inicio de sesión exitoso"
+    },
+    "register": {
+      "title": "Registrarse",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "error": "Error en el registro.",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "success": "Registro exitoso"
+    }
+  },
+
+  "admin": {
+    "login": {
+      "title": "Inicio de admin",
+      "email": "Correo",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "error": "Credenciales inválidas"
+    }
+  },
+
   "common": {
     "loading": "Cargando...",
     "error": "Algo salió mal",
@@ -269,7 +309,13 @@
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "edit": "Editar",
-    "back": "Volver"
+    "back": "Volver",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "yes": "Sí",
+    "no": "No"
   },
 
   "footer": {
