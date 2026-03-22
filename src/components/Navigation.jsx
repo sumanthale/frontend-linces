@@ -8,6 +8,7 @@ import UserMenu from "./UserMenu";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { t, language, toggleLanguage } = useLanguage();
   const { isAuthenticated, logout, isAdmin, user } = useAuth();
   const { getCartItemsCount } = useCart();
@@ -23,6 +24,14 @@ const Navigation = () => {
     logout();
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-200">
